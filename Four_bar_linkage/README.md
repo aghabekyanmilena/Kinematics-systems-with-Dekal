@@ -212,8 +212,6 @@ Dekal is an **implicit** solver: you describe allowed motion subspaces, then `co
 | File | Purpose |
 |------|---------|
 | `fourbar_2d_minimal.dek` | **Working model** — paste into Dekal |
-| `PRESENTATION.md` | Short talk / demo script |
-| `fourbar_2d.dek` | Longer earlier variant (prefer minimal) |
-| `reference-examples/` | Official Dekal demos for comparison |
+| `README.md` | Short talk / demo script |
 
 ---
