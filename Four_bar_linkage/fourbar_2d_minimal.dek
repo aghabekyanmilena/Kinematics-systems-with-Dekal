@@ -1,0 +1,31 @@
+printfn "# Square four-bar"
+
+printfn "Fixed bottom: A and D. Moving top: B and C."
+printfn "Drag lean - B moves and C follows."
+
+let root = tx 0.0 origin
+
+let A = root
+let D = tx 1.0 root
+
+let lean = 0.2
+let reaction = ?
+
+let link = fun atPos ->
+    ty 1.0 atPos |> rz !
+end
+
+let left = A |> rz (active reaction lean)
+
+let right = D |> rz !
+
+
+let B = left |> link
+
+
+B |> link
+right |> link
+collapse pop pop
+
+let cam = ty (-1.0) origin |> tz 2.5
+show root cam [lean]
