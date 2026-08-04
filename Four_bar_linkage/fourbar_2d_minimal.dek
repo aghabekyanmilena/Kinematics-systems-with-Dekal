@@ -1,30 +1,36 @@
 printfn "# Square four-bar"
 
-printfn "Fixed bottom: A and D. Moving top: B and C."
-printfn "Drag lean - B moves and C follows."
+printfn "FIXED: bottom points A, D and the bottom bar AD.
+MOVABLE: top points B, C and the three bars AB, BC, DC.
+Drag **lean** to move the top. Bottom never moves."
+
+printfn "```
+B ----- BC ----- C      movable top bar
+|                |
+AB               DC     movable side bars
+|                |
+A ----- AD ----- D      FIXED ground bar
+```"
 
 let root = tx 0.0 origin
 
-let A = root
-let D = tx 1.0 root
+let A = root              // fixed bottom-left
+let D = tx 1.0 root       // fixed bottom-right
 
-let lean = 0.2
+let lean = 0.0
 let reaction = ?
 
-let link = fun atPos ->
+let bar = fun atPos ->
     ty 1.0 atPos |> rz !
 end
 
-let left = A |> rz (active reaction lean)
+let hinge_A = A |> rz
+let hinge_D = D |> rz !
 
-let right = D |> rz !
+let B = hinge_A |> bar
 
-
-let B = left |> link
-
-
-B |> link
-right |> link
+B |> bar
+hinge_D |> bar
 collapse pop pop
 
 let cam = ty (-1.0) origin |> tz 2.5
