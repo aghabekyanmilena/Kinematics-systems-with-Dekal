@@ -5,7 +5,7 @@
 
 ---
 
-## 1. What are we building? (30 sec)
+## 1. What are we building?
 
 A **planar four-bar** shaped like a square / parallelogram:
 
@@ -13,7 +13,7 @@ A **planar four-bar** shaped like a square / parallelogram:
 B -------- C     ← MOVING (top bar)
 |          |
 |          |
-A -------- D     ← FIXED (ground)
+A -------- D     ← FIXED (ground point A)
 ```
 
 | Joint | Role |
