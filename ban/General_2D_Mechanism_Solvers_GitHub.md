@@ -38,18 +38,18 @@ There are two important ways to represent a planar mechanism.
 
 Every joint has Cartesian coordinates:
 
-\[
+$$
 P_i=(x_i,y_i).
-\]
+$$
 
-For \(N\) nodes, the complete unknown vector is
+For $N$ nodes, the complete unknown vector is
 
-\[
+$$
 q=
 \begin{bmatrix}
 x_1 & y_1 & x_2 & y_2 & \dots & x_N & y_N
 \end{bmatrix}^{T}.
-\]
+$$
 
 This model is natural for bar-and-joint mechanisms. A rigid bar is represented by a constant distance between two points.
 
@@ -70,46 +70,46 @@ Disadvantages:
 
 Each rigid body has a planar pose:
 
-\[
+$$
 q_i=
 \begin{bmatrix}
 x_i & y_i & \theta_i
 \end{bmatrix}^{T}.
-\]
+$$
 
 Here:
 
-- \(x_i,y_i\) are the body-origin coordinates;
-- \(\theta_i\) is the body orientation.
+- $x_i,y_i$ are the body-origin coordinates;
+- $\theta_i$ is the body orientation.
 
 A point with local body coordinates
 
-\[
+$$
 p_{local}=
 \begin{bmatrix}
 u\\v
 \end{bmatrix}
-\]
+$$
 
 has world coordinates
 
-\[
+$$
 p_{world}=
 \begin{bmatrix}
 x_i\\y_i
 \end{bmatrix}
 +R(\theta_i)p_{local},
-\]
+$$
 
 where the two-dimensional rotation matrix is
 
-\[
+$$
 R(\theta)=
 \begin{bmatrix}
 \cos\theta & -\sin\theta\\
 \sin\theta & \cos\theta
 \end{bmatrix}.
-\]
+$$
 
 Advantages:
 
@@ -134,39 +134,39 @@ Every mechanical relationship contributes one or more scalar equations.
 
 The complete system can be written as
 
-\[
+$$
 F(q,u)=0,
-\]
+$$
 
 where:
 
-- \(q\) contains unknown positions and orientations;
-- \(u\) contains prescribed inputs, such as motor angles and actuator lengths;
-- \(F\) is the vector of all constraint residuals.
+- $q$ contains unknown positions and orientations;
+- $u$ contains prescribed inputs, such as motor angles and actuator lengths;
+- $F$ is the vector of all constraint residuals.
 
-A valid mechanism position is any \(q\) for which every element of \(F\) is zero within numerical tolerance.
+A valid mechanism position is any $q$ for which every element of $F$ is zero within numerical tolerance.
 
 ### 4.1 Rigid bar
 
 Let a bar connect points
 
-\[
+$$
 A=(A_x,A_y), \qquad B=(B_x,B_y)
-\]
+$$
 
-and have constant length \(L\).
+and have constant length $L$.
 
 The distance equation is
 
-\[
+$$
 \sqrt{(B_x-A_x)^2+(B_y-A_y)^2}=L.
-\]
+$$
 
 An equivalent squared form is
 
-\[
+$$
 (B_x-A_x)^2+(B_y-A_y)^2-L^2=0.
-\]
+$$
 
 The squared form avoids a square root, although its numerical scaling must be handled carefully.
 
@@ -174,57 +174,57 @@ One rigid bar contributes **one scalar constraint**. It removes one relative deg
 
 ### 4.2 Fixed point
 
-If node \(A\) is fixed at
+If node $A$ is fixed at
 
-\[
+$$
 A^*=(A_x^*,A_y^*),
-\]
+$$
 
 then
 
-\[
+$$
 A_x-A_x^*=0,
-\]
+$$
 
-\[
+$$
 A_y-A_y^*=0.
-\]
+$$
 
 A fixed planar point contributes two scalar constraints.
 
 ### 4.3 Coincident points
 
-If points \(A\) and \(B\) must coincide,
+If points $A$ and $B$ must coincide,
 
-\[
+$$
 A_x-B_x=0,
-\]
+$$
 
-\[
+$$
 A_y-B_y=0.
-\]
+$$
 
 This is the point-coordinate equivalent of a revolute pin connecting two body attachment points.
 
 ### 4.4 Absolute angle
 
-For the vector from pivot \(A\) to tip \(B\), the angle can be measured using
+For the vector from pivot $A$ to tip $B$, the angle can be measured using
 
-\[
+$$
 \theta=\operatorname{atan2}(B_y-A_y,B_x-A_x).
-\]
+$$
 
 `atan2` is preferred over ordinary arctangent because it knows the correct quadrant and works for vertical vectors.
 
 Instead of constraining `atan2` directly, a robust motor equation often prescribes the vector components:
 
-\[
+$$
 B_x-A_x-L\cos\theta_{cmd}=0,
-\]
+$$
 
-\[
+$$
 B_y-A_y-L\sin\theta_{cmd}=0.
-\]
+$$
 
 This simultaneously specifies the bar length and its world angle.
 
@@ -232,93 +232,93 @@ This simultaneously specifies the bar length and its world angle.
 
 Let
 
-\[
+$$
 v_1=A-P, \qquad v_2=B-P
-\]
+$$
 
-be two vectors meeting at pivot \(P\).
+be two vectors meeting at pivot $P$.
 
 Their signed relative angle can be computed by
 
-\[
+$$
 \theta_{rel}=\operatorname{atan2}
 \left(
 v_{1x}v_{2y}-v_{1y}v_{2x},
 v_{1x}v_{2x}+v_{1y}v_{2y}
 \right).
-\]
+$$
 
 The first argument is the two-dimensional cross product and the second is the dot product.
 
 A relative-angle constraint is
 
-\[
+$$
 \operatorname{wrap}(\theta_{rel}-\theta_{cmd})=0.
-\]
+$$
 
 Angle wrapping maps the difference into a continuous interval such as
 
-\[
+$$
 (-\pi,\pi].
-\]
+$$
 
-Without wrapping, angles near \(0^\circ\) and \(360^\circ\) appear numerically far apart even though they represent nearly the same orientation.
+Without wrapping, angles near $0^\circ$ and $360^\circ$ appear numerically far apart even though they represent nearly the same orientation.
 
 ### 4.6 Linear bearing or slider constraint
 
-Let slider point \(S\) move on the line through guide points \(A\) and \(B\).
+Let slider point $S$ move on the line through guide points $A$ and $B$.
 
 Define
 
-\[
+$$
 g=B-A.
-\]
+$$
 
 The slider is on the infinite guide line when the two-dimensional cross product is zero:
 
-\[
+$$
 g_x(S_y-A_y)-g_y(S_x-A_x)=0.
-\]
+$$
 
 For better scaling, divide by guide length:
 
-\[
+$$
 \frac{g_x(S_y-A_y)-g_y(S_x-A_x)}{\|g\|}=0.
-\]
+$$
 
 This produces the signed perpendicular distance from the slider to the guide line.
 
 The equation removes motion normal to the guide but permits motion along it. Therefore, an ideal linear bearing contributes one scalar constraint for a point node.
 
-If motion must remain within a finite guide segment, introduce an inequality on the line parameter \(t\):
+If motion must remain within a finite guide segment, introduce an inequality on the line parameter $t$:
 
-\[
+$$
 S=A+t(B-A),
-\]
+$$
 
-\[
+$$
 t_{min}\le t\le t_{max}.
-\]
+$$
 
 ### 4.7 Linear actuator
 
-An actuator between points \(A\) and \(B\) has commanded length \(s\):
+An actuator between points $A$ and $B$ has commanded length $s$:
 
-\[
+$$
 \|B-A\|-s=0.
-\]
+$$
 
 The actuator state may evolve as
 
-\[
+$$
 s_{k+1}=s_k+v_s\Delta t,
-\]
+$$
 
 with stroke limits
 
-\[
+$$
 s_{min}\le s\le s_{max}.
-\]
+$$
 
 At a stroke limit, the controller may stop, reverse, or report a limit event.
 
@@ -332,19 +332,19 @@ A degree of freedom is an independent coordinate that may change without violati
 
 ### 5.1 Simple coordinate count
 
-For \(N\) independent point nodes in 2D, there are initially
+For $N$ independent point nodes in 2D, there are initially
 
-\[
+$$
 2N
-\]
+$$
 
 scalar coordinates.
 
-If the system contains \(m\) independent scalar constraints, the local mobility is approximately
+If the system contains $m$ independent scalar constraints, the local mobility is approximately
 
-\[
+$$
 M=2N-m.
-\]
+$$
 
 This count is valid only when the constraints are independent. Redundant equations do not remove additional freedom.
 
@@ -352,21 +352,21 @@ This count is valid only when the constraints are independent. Redundant equatio
 
 A free planar rigid body has three degrees of freedom:
 
-\[
+$$
 x,\quad y,\quad \theta.
-\]
+$$
 
 For mechanisms with lower-pair joints, the Grübler–Kutzbach count is often written
 
-\[
+$$
 M=3(n-1)-2j_1-j_2,
-\]
+$$
 
 where:
 
-- \(n\) is the number of links including ground;
-- \(j_1\) is the number of one-DOF lower pairs, such as revolute and prismatic joints;
-- \(j_2\) is the number of higher-pair constraints.
+- $n$ is the number of links including ground;
+- $j_1$ is the number of one-DOF lower pairs, such as revolute and prismatic joints;
+- $j_2$ is the number of higher-pair constraints.
 
 This is a useful topological estimate, not a universal proof. Special geometry, redundant constraints, coincident joints, and singular configurations can change the actual instantaneous mobility.
 
@@ -374,15 +374,15 @@ This is a useful topological estimate, not a universal proof. Special geometry, 
 
 For a closed five-bar linkage with one grounded link and five revolute joints,
 
-\[
+$$
 n=5, \qquad j_1=5.
-\]
+$$
 
 Therefore,
 
-\[
+$$
 M=3(5-1)-2(5)=2.
-\]
+$$
 
 The mechanism needs two independent inputs for a unique commanded pose. If only one motor angle is given, one free motion remains.
 
@@ -392,23 +392,23 @@ The mechanism needs two independent inputs for a unique commanded pose. If only 
 
 Counting equations is not enough. The correct local tool is the constraint Jacobian:
 
-\[
+$$
 J(q)=\frac{\partial F}{\partial q}.
-\]
+$$
 
 The Jacobian describes how small coordinate changes affect constraint errors:
 
-\[
+$$
 F(q+\Delta q)\approx F(q)+J(q)\Delta q.
-\]
+$$
 
-If the Jacobian has rank \(r\), then the local instantaneous mobility is
+If the Jacobian has rank $r$, then the local instantaneous mobility is
 
-\[
+$$
 M_{local}=n_q-r,
-\]
+$$
 
-where \(n_q\) is the number of scalar unknown coordinates.
+where $n_q$ is the number of scalar unknown coordinates.
 
 This rank-based result automatically accounts for redundant constraints.
 
@@ -416,15 +416,15 @@ This rank-based result automatically accounts for redundant constraints.
 
 If
 
-\[
+$$
 r<n_q,
-\]
+$$
 
-then the null space of \(J\) is nonempty:
+then the null space of $J$ is nonempty:
 
-\[
+$$
 J\Delta q=0
-\]
+$$
 
 has nonzero solutions.
 
@@ -434,9 +434,9 @@ Those null-space directions are instantaneous motions that preserve the constrai
 
 If the independent constraints remove all free motion,
 
-\[
+$$
 r=n_q,
-\]
+$$
 
 the configuration is locally isolated. Small changes cannot occur without changing an input or violating a constraint.
 
@@ -454,15 +454,15 @@ Redundancy appears as dependent Jacobian rows. It can improve validation but may
 
 If the equations demand incompatible geometry, no exact solution exists:
 
-\[
+$$
 F(q)\ne0
-\]
+$$
 
-for every possible \(q\).
+for every possible $q$.
 
 Example:
 
-- points \(A\) and \(B\) are fixed 100 mm apart;
+- points $A$ and $B$ are fixed 100 mm apart;
 - a rigid bar between them is commanded to have length 120 mm.
 
 No coordinates can satisfy both requirements.
@@ -477,11 +477,11 @@ It is important to distinguish several cases.
 
 The requested input is physically outside the linkage workspace.
 
-For two bars of lengths \(L_1,L_2\) connecting fixed endpoints separated by distance \(d\), an intersection exists only if
+For two bars of lengths $L_1,L_2$ connecting fixed endpoints separated by distance $d$, an intersection exists only if
 
-\[
+$$
 |L_1-L_2|\le d\le L_1+L_2.
-\]
+$$
 
 Outside this interval, the circles do not intersect.
 
@@ -509,9 +509,9 @@ These are separate questions.
 
 Does at least one configuration satisfy all constraints?
 
-\[
+$$
 \exists q:F(q,u)=0?
-\]
+$$
 
 ### 8.2 Local uniqueness
 
@@ -559,15 +559,15 @@ Disadvantages:
 
 A general solver assembles all residuals into
 
-\[
+$$
 F(q,u)
-\]
+$$
 
 and solves
 
-\[
+$$
 F(q,u)=0.
-\]
+$$
 
 This works for arbitrary graphs and mixed constraint types, provided the equations and derivatives are defined.
 
@@ -586,46 +586,46 @@ Common methods include:
 
 ## 10. Newton and Gauss–Newton logic
 
-At iteration \(k\), linearize the constraints:
+At iteration $k$, linearize the constraints:
 
-\[
+$$
 F(q_k+\Delta q)\approx F(q_k)+J_k\Delta q.
-\]
+$$
 
 For a square, nonsingular system, Newton solves
 
-\[
+$$
 J_k\Delta q=-F(q_k)
-\]
+$$
 
 and updates
 
-\[
+$$
 q_{k+1}=q_k+\Delta q.
-\]
+$$
 
 For a non-square system, solve a least-squares problem:
 
-\[
+$$
 \Delta q=operatorname*{argmin}_{z}
 \|J_kz+F(q_k)\|^2.
-\]
+$$
 
 The normal equations are
 
-\[
+$$
 J_k^TJ_k\Delta q=-J_k^TF(q_k),
-\]
+$$
 
 although QR or SVD factorizations are normally more stable than explicitly forming the normal equations.
 
 A damped system is
 
-\[
+$$
 (J_k^TJ_k+\lambda I)\Delta q=-J_k^TF(q_k).
-\]
+$$
 
-The damping \(\lambda\) improves behavior near singularities and with poor initial guesses.
+The damping $\lambda$ improves behavior near singularities and with poor initial guesses.
 
 ---
 
@@ -633,31 +633,31 @@ The damping \(\lambda\) improves behavior near singularities and with poor initi
 
 Suppose the hard constraints are
 
-\[
+$$
 F(q,u)=0
-\]
+$$
 
-but several valid \(q\) values exist. The solver needs a secondary selection rule.
+but several valid $q$ values exist. The solver needs a secondary selection rule.
 
 The most important rule is nearest-state continuation:
 
-\[
+$$
 q_{new}=
 \operatorname*{argmin}_{q}
 \|q-q_{previous}\|_W^2
-\]
+$$
 
 subject to
 
-\[
+$$
 F(q,u)=0.
-\]
+$$
 
 Here
 
-\[
+$$
 \|x\|_W^2=x^TWx
-\]
+$$
 
 is a weighted squared distance.
 
@@ -671,12 +671,12 @@ The software has not created a new physical constraint. It has added a numerical
 
 ### 11.1 Mouse drag as a temporary objective
 
-When the user drags point \(P\) toward cursor position \(P_c\), the solver may minimize
+When the user drags point $P$ toward cursor position $P_c$, the solver may minimize
 
-\[
+$$
 \|P(q)-P_c\|^2
 +\alpha\|q-q_{previous}\|^2
-\]
+$$
 
 subject to all hard mechanism constraints.
 
@@ -713,15 +713,15 @@ A least-squares implementation may use large weights for hard constraints and sm
 
 The safer mathematical form is constrained optimization:
 
-\[
+$$
 \min_q G(q)
-\]
+$$
 
 subject to
 
-\[
+$$
 F(q,u)=0.
-\]
+$$
 
 ---
 
@@ -733,27 +733,27 @@ A motor is not merely a visual rotation animation. It changes a constraint param
 
 An absolute motor commands a link angle relative to the world x-axis:
 
-\[
+$$
 \theta(t)=\theta_0+\omega t.
-\]
+$$
 
 The motor equations place the driven point at
 
-\[
+$$
 B=A+L
 \begin{bmatrix}
 \cos\theta(t)\\
 \sin\theta(t)
 \end{bmatrix}.
-\]
+$$
 
 ### 13.2 Relative motor
 
 A relative motor commands the angle between two bodies or links:
 
-\[
+$$
 \theta_2-\theta_1=\theta_{cmd}(t).
-\]
+$$
 
 This is usually more physically correct for a motor mounted between two moving bodies.
 
@@ -761,9 +761,9 @@ This is usually more physically correct for a motor mounted between two moving b
 
 With angular limits,
 
-\[
+$$
 \theta_{min}\le\theta\le\theta_{max}.
-\]
+$$
 
 At a limit, the driver may:
 
@@ -775,11 +775,11 @@ At a limit, the driver may:
 
 ### 13.4 Continuous rotation and angle unwrapping
 
-The orientations \(0^\circ\) and \(360^\circ\) are geometrically identical, but a motor may need to count revolutions. Maintain an unwrapped state such as
+The orientations $0^\circ$ and $360^\circ$ are geometrically identical, but a motor may need to count revolutions. Maintain an unwrapped state such as
 
-\[
+$$
 0^\circ,360^\circ,720^\circ,\dots
-\]
+$$
 
 for driver logic, while using sine and cosine for geometric constraints.
 
@@ -789,43 +789,43 @@ for driver logic, while using sine and cosine for geometric constraints.
 
 For one link attached to a known pivot, position follows directly from rotation:
 
-\[
+$$
 x=x_p+L\cos\theta,
-\]
+$$
 
-\[
+$$
 y=y_p+L\sin\theta.
-\]
+$$
 
 For an open serial chain,
 
-\[
+$$
 x_k=x_0+\sum_{i=1}^{k}L_i\cos\Theta_i,
-\]
+$$
 
-\[
+$$
 y_k=y_0+\sum_{i=1}^{k}L_i\sin\Theta_i,
-\]
+$$
 
-where \(\Theta_i\) is the absolute orientation of link \(i\).
+where $\Theta_i$ is the absolute orientation of link $i$.
 
 If joint angles are relative,
 
-\[
+$$
 \Theta_i=\sum_{j=1}^{i}\theta_j.
-\]
+$$
 
 This is forward kinematics.
 
 Closed chains are harder because the final chain must return to the closing joint. The closure equation is
 
-\[
+$$
 \sum_i L_i
 \begin{bmatrix}
 \cos\Theta_i\\
 \sin\Theta_i
 \end{bmatrix}=0.
-\]
+$$
 
 The unknown angles must satisfy both scalar components simultaneously.
 
@@ -862,9 +862,9 @@ A singularity occurs when the Jacobian loses rank.
 
 Two connected bars become collinear. At the fully extended position,
 
-\[
+$$
 d=L_1+L_2.
-\]
+$$
 
 The two circle intersections merge. The elbow-up and elbow-down branches meet.
 
@@ -882,21 +882,21 @@ Near a singularity:
 
 Compute singular values of the Jacobian:
 
-\[
+$$
 J=U\Sigma V^T.
-\]
+$$
 
 If the smallest relevant singular value approaches zero, the system is near singular:
 
-\[
+$$
 \sigma_{min}\rightarrow0.
-\]
+$$
 
 The condition number
 
-\[
+$$
 \kappa=\frac{\sigma_{max}}{\sigma_{min}}
-\]
+$$
 
 becomes large.
 
@@ -913,13 +913,13 @@ Examples include:
 - slider on one or the other side of a pivot;
 - mirrored closed-chain configurations.
 
-A branch identifier may be based on an orientation sign. For three points \(A,B,C\), define
+A branch identifier may be based on an orientation sign. For three points $A,B,C$, define
 
-\[
+$$
 s=\operatorname{sign}\left((B-A)\times(C-A)\right).
-\]
+$$
 
-The sign distinguishes which side of line \(AB\) contains \(C\).
+The sign distinguishes which side of line $AB$ contains $C$.
 
 Branch control methods include:
 
@@ -936,21 +936,21 @@ Branch control methods include:
 
 A pure kinematic simulator does not calculate forces or inertia. It advances driver variables and solves positions.
 
-At time step \(k\):
+At time step $k$:
 
-1. Save the last valid state \(q_k\).
+1. Save the last valid state $q_k$.
 2. Advance input variables:
 
-   \[
+$$
    u_{k+1}=u_k+\dot u\Delta t.
-   \]
+$$
 
 3. Predict an initial coordinate state.
 4. Solve
 
-   \[
+$$
    F(q_{k+1},u_{k+1})=0.
-   \]
+$$
 
 5. Validate every hard constraint.
 6. Commit the new state only when valid.
@@ -960,21 +960,21 @@ At time step \(k\):
 
 The simplest initial guess is
 
-\[
+$$
 q_{guess}=q_k.
-\]
+$$
 
 A better predictor is
 
-\[
+$$
 q_{guess}=q_k+\dot q_k\Delta t.
-\]
+$$
 
 Prediction improves convergence and branch continuity.
 
 ### 18.2 Adaptive step size
 
-If the solver fails, reduce \(\Delta t\) and retry. If convergence is easy, increase it gradually. This helps near singularities and workspace boundaries.
+If the solver fails, reduce $\Delta t$ and retry. If convergence is easy, increase it gradually. This helps near singularities and workspace boundaries.
 
 ---
 
@@ -982,15 +982,15 @@ If the solver fails, reduce \(\Delta t\) and retry. If convergence is easy, incr
 
 Floating-point computation almost never gives exact mathematical zero. A constraint is accepted when
 
-\[
+$$
 |f_i(q)|\le\varepsilon_i.
-\]
+$$
 
 Tolerances should reflect units and model scale. A common form is
 
-\[
+$$
 \varepsilon=\varepsilon_{abs}+L_{scale}\varepsilon_{rel}.
-\]
+$$
 
 Validate different constraint types separately:
 
@@ -1017,13 +1017,13 @@ Poor scaling can cause the solver to satisfy one constraint while neglecting ano
 
 Use normalized residuals such as
 
-\[
+$$
 \hat f_{distance}=\frac{\|B-A\|-L}{L_{scale}},
-\]
+$$
 
-\[
+$$
 \hat f_{angle}=\frac{\operatorname{wrap}(\theta-\theta_{cmd})}{\theta_{scale}}.
-\]
+$$
 
 Scaling changes numerical conditioning, not physical priority. Hard-versus-soft status should be represented explicitly or with carefully separated weights and post-validation.
 
@@ -1096,7 +1096,7 @@ Use graph traversal to identify:
 
 ### 21.4 Variable manager
 
-Maps model IDs to positions in \(q\):
+Maps model IDs to positions in $q$:
 
 ```text
 node 17 -> q[6], q[7]
@@ -1264,15 +1264,15 @@ It does not answer:
 
 A dynamic solver introduces velocities, accelerations, masses, forces, and constraint reactions. A common differential-algebraic form is
 
-\[
+$$
 M(q)\ddot q+C_q(q)^T\lambda=Q,
-\]
+$$
 
 with constraints
 
-\[
+$$
 C(q,t)=0.
-\]
+$$
 
 For an editor intended first for mechanism geometry, a position-level kinematic solver is the correct starting point.
 
