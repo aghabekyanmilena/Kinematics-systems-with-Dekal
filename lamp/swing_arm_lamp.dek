@@ -1,0 +1,49 @@
+printfn "# Swing-arm lamp (double parallelogram)"
+
+printfn "Desk-lamp pose in the vertical XZ plane (Z up).
+theta1 = 0 is horizontal lower bars; pi/2 is straight up.
+theta2 = 0 is horizontal upper bars.
+head_tilt tips the shade from straight down.
+Moving theta1 does not swing the upper bars (parallelogram / world angles)."
+
+let root = tx 0.0 origin
+
+let h = 0.08
+let L1 = 0.45
+let L2 = 0.40
+let post = 0.12
+let shade_len = 0.18
+
+let theta1 = 1.15
+let theta2 = 0.0
+let head_tilt = 0.45
+
+let base = root
+let A = tz post base
+let D = tz h A
+
+let B = A |> ry theta1 |> tx L1
+let C = D |> ry theta1 |> tx L1
+
+B |> ry (0.0 - theta1) |> tz h
+
+let E = B |> ry (theta2 - theta1) |> tx L2
+let F = C |> ry (theta2 - theta1) |> tx L2
+
+E |> ry (0.0 - theta2) |> tz h
+
+let shade = E |> ry (head_tilt - theta2) |> tz (0.0 - shade_len)
+
+let cam = ty 1.5 origin |> tz 0.45 |> tx 0.35
+show root cam [theta1; theta2; head_tilt]
+
+printfn "Drag theta1 (lower arm), theta2 (upper arm), head_tilt (shade)."
+
+printfn "## Animation"
+
+animate (fun t ->
+    let phase = t * PI * 2
+    let theta1 = 1.15 + 0.22 * (sin phase)
+    let theta2 = 0.05 * (cos phase)
+    show root cam []
+end) 60

@@ -1,0 +1,32 @@
+printfn "# Two-link robotic arm (RR)"
+
+printfn "A classic planar serial arm: base -> shoulder -> link1 -> elbow -> link2 -> tip.
+Two revolute joints (rz), two fixed link lengths (tx).
+Drive the joint angles; the tip pose is composed transforms (no collapse)."
+
+let base = tx 0.0 origin
+
+let L1 = 1.0
+let L2 = 0.8
+let theta1 = 0.6
+let theta2 = 0.9
+
+let shoulder = rz theta1 base
+let elbow = tx L1 shoulder
+let forearm = rz theta2 elbow
+let tip = tx L2 forearm
+
+let cam = ty (-0.5) origin |> tz 2.5
+show base cam [theta1; theta2]
+
+printfn "Drag theta1 / theta2 to pose the arm."
+
+printfn "## Animation"
+
+animate (fun t ->
+    let phase = t * PI * 2
+    let theta1 = 0.4 + 0.5 * (sin phase)
+    let theta2 = 0.7 + 0.6 * (cos phase)
+    solve ()
+    show base cam []
+end) 60
