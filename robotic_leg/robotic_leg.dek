@@ -1,0 +1,51 @@
+printfn "# Robotic leg (3R serial + ankle)"
+
+printfn "Quadruped / humanoid leg hanging from a fixed hip.
+abd = hip abduction (rx), out of the sagittal plane.
+hip = thigh swing, 0 = straight down, positive = forward.
+knee = 0 is straight; positive folds the shin backward.
+ankle is a world pitch: 0 keeps the sole flat (toes +X).
+Open chain FK: drive the joints; no collapse."
+
+let root = tx 0.0 origin
+
+let L_thigh = 0.40
+let L_shin = 0.36
+let foot_len = 0.14
+let hip_h = 0.70
+
+let abd = 0.12
+let hip = 0.40
+let knee = 0.85
+let ankle = 0.0
+
+let ground0 = tx (0.0 - 0.25) root
+tx 0.55 ground0
+
+let hip_joint = tz hip_h root
+ty (0.0 - 0.05) hip_joint
+ty 0.05 hip_joint
+
+let hip_ab = rx abd hip_joint
+let hip_pt = ry (0.0 - hip) hip_ab
+let knee_at = tz (0.0 - L_thigh) hip_pt
+let knee_j = ry knee knee_at
+let heel = tz (0.0 - L_shin) knee_j
+
+let sole = heel |> ry (hip - knee) |> rx (0.0 - abd) |> ry ankle
+tx foot_len sole
+
+let cam = ty 1.5 origin |> tz 0.40 |> tx 0.45
+show root cam [abd; hip; knee; ankle]
+
+printfn "Drag abd / hip / knee / ankle."
+
+printfn "## Animation"
+
+animate (fun t ->
+    let phase = t * PI * 2
+    let hip = 0.40 + 0.28 * (sin phase)
+    let knee = 0.85 + 0.32 * (0.5 + 0.5 * (sin phase))
+    let abd = 0.12 + 0.08 * (sin (phase * 2.0))
+    show root cam []
+end) 60
